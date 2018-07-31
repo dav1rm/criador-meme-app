@@ -1,41 +1,61 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet, Text, View, TextInput} from 'react-native';
+import {ImageBackground, StyleSheet, Text, View, Button} from 'react-native';
 
 export default class App extends Component {
-  constructor(){
-    super();
-    this.state = {texto1: '', texto2: ''};
-    this.escrever = this.escrever.bind(this);
+
+  constructor(props){
+    super(props);
+    this.state = { consumido: 0, status: 'Ruim', pct: 0 }
+    this.addCopo = this.addCopo.bind(this);
+    this.atualizar = this.atualizar.bind(this);
   }
-  mudarVogais(texto) {
-    // Deixa todo o testo minusculo
-    let novoTexto = texto.toLowerCase();
-    // Substitui as vogais por i
-    novoTexto = novoTexto.replace(/(a|á|à|ã|â|e|ê|é|è|i|í|ì|î|o|ô|õ|ó|ò|u|ú|ù|ũ)/g, 'i');
-    return novoTexto;
+  atualizar(){
+    let s = this.state;
+    s.pct = Math.floor(((s.consumido/2000)*100));
+    if (s.pct >= 100) {
+      s.status = 'Bom';
+    } else {
+      s.status = 'Ruim';
+    }
+    this.setState(s);
   }
-  escrever(t) {
-    // Trocas as vogais por i
-    let texto2 = this.mudarVogais(t);
-    // Salva a frase normal
-    let texto1 = t;
-    // Salva no state
-    this.setState({texto1, texto2})
+  addCopo(){
+    let s = this.state;
+    s.consumido += 200;
+    this.setState(s);
+    this.atualizar();
   }
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.titulo}>Criador de Meme</Text>
-        </View>
-        <View style={styles.inputArea}>
-          <TextInput style={styles.input} onChangeText={this.escrever} placeholder="Escreva algo..."></TextInput>
-        </View>
-        <View style={styles.body}>
-          <Text style={[styles.texto, styles.texto1]}>{this.state.texto1.toUpperCase()}</Text>
-          <Image style={styles.imagem} source={require('./images/meme.jpg')} />
-          <Text style={[styles.texto, styles.texto2]}>{this.state.texto2.toUpperCase()}</Text>
-        </View>
+        <ImageBackground style={styles.bgImage} source={require('./images/waterbg.png')}>
+          <View>
+            <View style={styles.infoArea}>
+              <View style={styles.area}>
+                <Text style={styles.titulo}>Meta</Text>
+                <Text style={styles.dado}>2000ml</Text>
+              </View>
+              <View style={styles.area}>
+                <Text style={styles.titulo}>Consumido</Text>
+                <Text style={styles.dado}>{this.state.consumido}ml</Text>
+              </View>
+              <View style={styles.area}>
+                <Text style={styles.titulo}>Status</Text>
+                <Text style={styles.dado}>{this.state.status}</Text>
+              </View>
+            </View>
+            <View style={styles.porcentagemArea}>
+              <Text style={styles.porcentagemText}>{this.state.pct}%</Text>
+            </View>
+            <View style={styles.btnArea}>
+              <Button 
+                style={styles.botao} 
+                title='Beber 200ml'
+                onPress={this.addCopo}
+              />
+            </View>
+          </View>
+        </ImageBackground>
       </View>
     );
   }
@@ -44,58 +64,40 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
     backgroundColor: '#D5D0CD',
   },
-  header: {
-    height: 50,
-    width: '100%',
-    backgroundColor: '#1abc9c',
-    padding: 10,
+  bgImage: {
+    flex: 1,
+    width: null
+  },
+  infoArea: {
+    flex: 1,
+    flexDirection: 'row',
+    marginTop: 70
+  },
+  area: {
+    flex: 1,
+    alignItems: 'center'
   },
   titulo: {
-    color: 'white',
-    fontSize: 20,
+    color: '#45b2fc'
+  },
+  dado: {
     fontWeight: 'bold',
-    textAlign: 'center',
+    fontSize: 15,
+    color: '#2b4274'
   },
-  imagem: {
-    height: 350,
-    width: 350,
-    marginTop: -70,
-    zIndex:0,
+  porcentagemArea: {
+    marginTop: 120,
+    alignItems: 'center'
   },
-  body: {
-    height: 350,
-    width: 350,
-    marginTop: 20,
-  },
-  input: {
-    borderWidth: 1,
-    backgroundColor: '#EEEEEE',
-    borderColor: '#999999',
-    color: '#000000',
-    height: 40,
-    margin: 10,
-    padding: 10,
-  },
-  inputArea: {
-    alignSelf: 'stretch',
-  },
-  texto: {
-    height: 70,
-    color: 'white',
+  porcentagemText: {
+    fontSize: 70,
     backgroundColor: 'transparent',
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: '#ffffff'
   },
-  texto1: {
-    zIndex:1
-  },
-  texto2: {
-    marginTop: -70,
-    zIndex:1
-  },
+  btnArea: {
+    marginTop: 30,
+    alignItems: 'center'
+  }
 });
