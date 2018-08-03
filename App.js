@@ -1,41 +1,76 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet, Text, View, TextInput} from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+
+class Botao extends Component {
+  constructor(props){
+    super(props);
+    this.state = {};
+    this.styles = StyleSheet.create({
+      botao: {
+        width: 250,
+        height: 50,
+        borderWidth: 2,
+        borderRadius: 3,
+        borderColor: props.color,
+        marginTop: 10,
+        backgroundColor: 'transparent',
+        padding: 10,
+      },
+      nomeBotao: {
+        color: props.color,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: 16
+      }
+    });
+    // this.escrever = this.escrever.bind(this);
+  }
+  render() {
+    return (
+      <TouchableOpacity style={this.styles.botao} onPress={this.props.onPress}>
+        <Text style={this.styles.nomeBotao}>{this.props.texto}</Text>
+      </TouchableOpacity>
+    );
+  }
+}
 
 export default class App extends Component {
-  constructor(){
-    super();
-    this.state = {texto1: '', texto2: ''};
-    this.escrever = this.escrever.bind(this);
+  constructor(props){
+    super(props);
+    this.state = {texto: ''};
+    this.frases = [
+      "Por outro lado, a consolidação das estruturas exige a precisão e a definição do sistema de formação de quadros que corresponde às necessidades.",
+      "O avanço tecnológico, assim como o entendimento das metas propostas, promovem alavancagem dos índices pretendidos.",
+      "As experiências acumuladas demonstram que a valorização de fatores subjetivos aponta para a melhoria das direções preferenciais no sentido do progresso.",
+      "Gostaria de enfatizar que a percepção das dificuldades assume importantes posições no estabelecimento do processo de comunicação como um todo.",
+      "As experiências acumuladas demonstram que o desenvolvimento contínuo de distintas formas de atuação não pode mais se dissociar do levantamento das variáveis envolvidas.",
+      "O que temos que ter sempre em mente é que o aumento do diálogo entre os diferentes setores produtivos promove a alavancagem do fluxo de informações.",
+      "Todavia, a valorização de fatores subjetivos oferece uma interessante oportunidade para verificação das formas de ação.",
+      "Nunca é demais lembrar o peso e o significado destes problemas, uma vez que a estrutura atual da organização exige a precisão e a definição das condições financeiras e administrativas exigidas.",
+      "É claro que a constante divulgação das informações aponta para a melhoria do retorno esperado a longo prazo.",
+      "Gostaria de enfatizar que o acompanhamento das preferências de consumo acarreta um processo de reformulação e modernização das direções preferenciais no sentido do progresso.",
+      "A prática cotidiana prova que a competitividade nas transações comerciais facilita a criação do orçamento setorial.",
+      "O empenho em analisar o início da atividade geral de formação de atitudes auxilia a preparação e a composição dos níveis de motivação departamental.",
+      "Neste sentido, a expansão dos mercados mundiais pode nos levar a considerar a reestruturação do sistema de formação de quadros que corresponde às necessidades.",
+      "No entanto, não podemos esquecer que a contínua expansão de nossa atividade é uma das consequências do sistema de formação de quadros que corresponde às necessidades.",
+      "A prática cotidiana prova que a percepção das dificuldades prepara-nos para enfrentar situações atípicas decorrentes do remanejamento dos quadros funcionais.",
+      "Evidentemente, a determinação clara de objetivos garante a contribuição de um grupo importante na determinação dos paradigmas corporativos.",
+      "Nunca é demais lembrar o peso e o significado destes problemas, uma vez que o comprometimento entre as equipes agrega valor ao estabelecimento do orçamento setorial."
+    ];
+    this.quebrarBiscoito = this.quebrarBiscoito.bind(this);
   }
-  mudarVogais(texto) {
-    // Deixa todo o testo minusculo
-    let novoTexto = texto.toLowerCase();
-    // Substitui as vogais por i
-    novoTexto = novoTexto.replace(/(a|á|à|ã|â|e|ê|é|è|i|í|ì|î|o|ô|õ|ó|ò|u|ú|ù|ũ)/g, 'i');
-    return novoTexto;
-  }
-  escrever(t) {
-    // Trocas as vogais por i
-    let texto2 = this.mudarVogais(t);
-    // Salva a frase normal
-    let texto1 = t;
-    // Salva no state
-    this.setState({texto1, texto2})
+  quebrarBiscoito() {
+    let s = this.state;
+    let r = Math.floor(Math.random() * this.frases.length);
+    s.texto = this.frases[r];
+    this.setState(s);
   }
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.titulo}>Criador de Meme</Text>
-        </View>
-        <View style={styles.inputArea}>
-          <TextInput style={styles.input} onChangeText={this.escrever} placeholder="Escreva algo..."></TextInput>
-        </View>
-        <View style={styles.body}>
-          <Text style={[styles.texto, styles.texto1]}>{this.state.texto1.toUpperCase()}</Text>
-          <Image style={styles.imagem} source={require('./images/meme.jpg')} />
-          <Text style={[styles.texto, styles.texto2]}>{this.state.texto2.toUpperCase()}</Text>
-        </View>
+        <Image source={ require('./images/cookie.png')} />
+        <Text style={styles.texto}>"{this.state.texto}"</Text>
+        <Botao color='#bc1a3a' texto='Quebrar Biscoito' onPress={this.quebrarBiscoito}/>
       </View>
     );
   }
@@ -44,58 +79,17 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: '#D5D0CD',
   },
-  header: {
-    height: 50,
-    width: '100%',
-    backgroundColor: '#1abc9c',
-    padding: 10,
-  },
-  titulo: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  imagem: {
-    height: 350,
-    width: 350,
-    marginTop: -70,
-    zIndex:0,
-  },
-  body: {
-    height: 350,
-    width: 350,
-    marginTop: 20,
-  },
-  input: {
-    borderWidth: 1,
-    backgroundColor: '#EEEEEE',
-    borderColor: '#999999',
-    color: '#000000',
-    height: 40,
-    margin: 10,
-    padding: 10,
-  },
-  inputArea: {
-    alignSelf: 'stretch',
-  },
   texto: {
-    height: 70,
-    color: 'white',
-    backgroundColor: 'transparent',
     fontSize: 20,
     fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  texto1: {
-    zIndex:1
-  },
-  texto2: {
-    marginTop: -70,
-    zIndex:1
-  },
+    color: '#bc1a3a',
+    margin: 30,
+    fontStyle: 'italic',
+    textAlign: 'center'
+  }
 });
